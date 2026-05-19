@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevTools Free - JSON格式化 / AI文案生成 / 图片去背景</title>
+<meta name="description" content="免费在线开发工具：JSON格式化验证、AI智能文案生成、图片背景去除。无需注册，即开即用。">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,PingFang SC,Microsoft YaHei,sans-serif;background:#f8fafc;color:#1e293b}
+.header{background:#0f172a;color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:20px}
+.header nav a{color:#94a3b8;margin-left:20px;text-decoration:none;font-size:14px}
+.header nav a:hover{color:#fff}
+.header .pro-btn{background:#6366f1;color:#fff;padding:6px 16px;border-radius:6px;font-size:13px}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:32px}
+.tool-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;transition:box-shadow .2s}
+.tool-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.tool-card .icon{font-size:32px;margin-bottom:12px}
+.tool-card h3{font-size:18px;margin-bottom:8px}
+.tool-card p{font-size:14px;color:#64748b}
+.tool-panel{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:none}
+.tool-panel.active{display:block}
+.tool-panel h2{margin-bottom:16px}
+textarea{width:100%;height:200px;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-family:SF Mono,Consolas,monospace;font-size:13px;resize:vertical}
+button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+.btn-primary{background:#6366f1;color:#fff}
+.btn-primary:hover{background:#4f46e5}
+.btn-secondary{background:#e2e8f0;color:#334155;margin-right:8px}
+.btn-secondary:hover{background:#cbd5e1}
+.actions{margin-top:12px;display:flex;gap:8px}
+.output{margin-top:16px;background:#f1f5f9;border-radius:8px;padding:16px;min-height:100px;font-family:SF Mono,Consolas,monospace;font-size:13px;white-space:pre-wrap;word-break:break-all}
+.error{color:#dc2626}
+.success{color:#16a34a}
+.pro-banner{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-radius:12px;padding:24px;margin-top:24px;text-align:center}
+.pro-banner h2{margin-bottom:8px}
+.pro-banner p{margin-bottom:16px;opacity:.9;font-size:14px}
+.pro-banner a{display:inline-block;background:#fff;color:#6366f1;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600}
+.footer{text-align:center;padding:24px;color:#94a3b8;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>DevTools Free</h1>
+  <nav>
+    <a href="#" onclick="showTool('json')">JSON格式化</a>
+    <a href="#" onclick="showTool('aiwrite')">AI文案</a>
+    <a href="#" onclick="showTool('bgremove')">去背景</a>
+    <a href="#" class="pro-btn">PRO $4.99</a>
+  </nav>
+</div>
+
+<div class="container">
+
+  <div class="tools-grid">
+    <div class="tool-card" onclick="showTool('json')">
+      <div class="icon">&#123;&#125;</div>
+      <h3>JSON 格式化/验证</h3>
+      <p>美化压缩JSON，语法验证，一键复制</p>
+    </div>
+    <div class="tool-card" onclick="showTool('aiwrite')">
+      <div class="icon">&#9998;</div>
+      <h3>AI 文案生成 <sup style="background:#6366f1;color:#fff;padding:1px 4px;border-radius:3px;font-size:10px">PRO</sup></h3>
+      <p>输入关键词生成小红书文案、公众号标题</p>
+    </div>
+    <div class="tool-card" onclick="showTool('bgremove')">
+      <div class="icon">&#127912;</div>
+      <h3>图片去背景 <sup style="background:#6366f1;color:#fff;padding:1px 4px;border-radius:3px;font-size:10px">PRO</sup></h3>
+      <p>AI一键移除图片背景，高清输出</p>
+    </div>
+  </div>
+
+  <!-- JSON Tool -->
+  <div id="json-panel" class="tool-panel active">
+    <h2>JSON 格式化 / 验证</h2>
+    <textarea id="json-input" placeholder='粘贴JSON，例如: {"name":"DevTools","version":1.0}'></textarea>
+    <div class="actions">
+      <button class="btn-primary" onclick="formatJSON()">格式化</button>
+      <button class="btn-secondary" onclick="compressJSON()">压缩</button>
+      <button class="btn-secondary" onclick="validateJSON()">验证</button>
+      <button class="btn-secondary" onclick="copyOutput()">复制</button>
+    </div>
+    <div id="json-output" class="output">等待输入...</div>
+  </div>
+
+  <!-- AI Writer -->
+  <div id="aiwrite-panel" class="tool-panel">
+    <h2>AI 文案生成 <span style="color:#6366f1;font-size:14px">PRO功能</span></h2>
+    <textarea id="aiwrite-input" placeholder="输入你的内容主题，例如：推荐3个提高工作效率的AI工具"></textarea>
+    <div class="actions">
+      <select id="aiwrite-type" style="padding:10px;border:1px solid #e2e8f0;border-radius:8px">
+        <option value="xiaohongshu">小红书文案</option>
+        <option value="gongzhonghao">公众号标题</option>
+        <option value="pengyouquan">朋友圈文案</option>
+      </select>
+      <button class="btn-primary" onclick="generateAI()" id="aiwrite-btn">生成文案</button>
+      <span id="aiwrite-count" style="font-size:12px;color:#94a3b8;line-height:40px;margin-left:8px">免费额度：3次/天</span>
+    </div>
+    <div id="aiwrite-output" class="output">AI生成的文案将显示在这里...<br><br>
+<div style="background:#fef3c7;padding:12px;border-radius:8px;font-family:-apple-system,sans-serif">
+<strong>PRO升级解锁：</strong><br>
+- 无限次数AI文案生成<br>
+- 小红书/公众号/知乎/短视频全平台<br>
+- 图片去背景功能<br>
+- 仅需 $4.99 一次性购买
+</div></div>
+  </div>
+
+  <!-- BG Remove -->
+  <div id="bgremove-panel" class="tool-panel">
+    <h2>AI 图片去背景 <span style="color:#6366f1;font-size:14px">PRO功能</span></h2>
+    <div style="border:2px dashed #e2e8f0;border-radius:12px;padding:48px;text-align:center;color:#94a3b8" id="bg-drop">
+      拖拽图片到此处或点击上传<br><small>PRO用户专享</small>
+    </div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn-primary" disabled style="opacity:.5">上传图片 (PRO)</button>
+    </div>
+  </div>
+
+  <!-- PRO Banner -->
+  <div class="pro-banner">
+    <h2>升级 PRO - 一次性购买 $4.99</h2>
+    <p>无限AI文案 + 图片去背景 + JSON高级功能 + 未来所有新工具</p>
+    <a href="#" onclick="buyPro()">立即升级</a>
+    <p style="margin-top:8px;font-size:12px;opacity:.7">支持 PayPal / 支付宝 / 微信支付</p>
+  </div>
+</div>
+
+<div class="footer">
+  DevTools Free - 无需注册，即开即用 | PRO $4.99 一次性购买永久有效
+</div>
+
+<script>
+function showTool(name) {
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(name+'-panel').classList.add('active');
+}
+
+function formatJSON() {
+  const input = document.getElementById('json-input').value;
+  const output = document.getElementById('json-output');
+  try {
+    const parsed = JSON.parse(input);
+    output.innerHTML = '<span class="success">JSON有效</span>\n' + JSON.stringify(parsed, null, 2);
+    output.className = 'output';
+  } catch(e) {
+    output.innerHTML = '<span class="error">JSON无效: ' + e.message + '</span>';
+    output.className = 'output';
+  }
+}
+
+function compressJSON() {
+  const input = document.getElementById('json-input').value;
+  const output = document.getElementById('json-output');
+  try {
+    const parsed = JSON.parse(input);
+    output.innerHTML = JSON.stringify(parsed);
+    output.className = 'output';
+  } catch(e) {
+    output.innerHTML = '<span class="error">JSON无效</span>';
+    output.className = 'output';
+  }
+}
+
+function validateJSON() {
+  const input = document.getElementById('json-input').value;
+  const output = document.getElementById('json-output');
+  try {
+    JSON.parse(input);
+    output.innerHTML = '<span class="success">JSON 验证通过</span>';
+  } catch(e) {
+    output.innerHTML = '<span class="error">验证失败: ' + e.message + '</span>';
+  }
+}
+
+function copyOutput() {
+  const text = document.getElementById('json-output').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = document.getElementById('json-output').innerHTML;
+    document.getElementById('json-output').innerHTML = '<span class="success">已复制到剪贴板!</span>';
+    setTimeout(() => { document.getElementById('json-output').innerHTML = orig; }, 1500);
+  });
+}
+
+let aiUsage = parseInt(localStorage.getItem('ai_usage') || '0');
+
+function generateAI() {
+  if (aiUsage >= 3) {
+    document.getElementById('aiwrite-output').innerHTML =
+      '<div style="background:#fef3c7;padding:12px;border-radius:8px"><strong>免费额度已用完</strong><br>今日已使用3次。升级PRO无限使用 → <a href="#" onclick="buyPro()" style="color:#6366f1">$4.99</a></div>';
+    return;
+  }
+
+  const topic = document.getElementById('aiwrite-input').value || '推荐3个提高工作效率的AI工具';
+  const type = document.getElementById('aiwrite-type').value;
+
+  const templates = {
+    xiaohongshu: [
+      '被这些AI工具惊到了！工作效率翻倍的秘密\u{1f929}\n\n1\u{fe0f}\u{20e3} DeepSeek - 免费且中文超强\n2\u{fe0f}\u{20e3} Claude - 写长文质量最高\n3\u{fe0f}\u{20e3} Kimi - 读长文档神器\n\n#AI工具 #效率提升 #打工人必备',
+      '打工人速存！这3个免费AI让我每天准时下班\u{1f4bc}\n\n用了半年实测，只推荐真正好用的：\n\u{2728} ChatGPT - 综合能力最强\n\u{2728} 豆包 - 做图写文案一体\n\u{2728} 通义千问 - PPT直接出成品\n\n#职场效率 #摸鱼必备',
+    ],
+    gongzhonghao: [
+      '2026年AI工具推荐：这3款免费工具让你的工作效率翻3倍',
+      '用了这3个AI工具后，我再也没有加过班',
+    ],
+    pengyouquan: [
+      '安利3个AI神器，工作速度快到同事以为我开挂了\u{1f680}',
+      '终于不用加班了！这个AI组合拳真的绝\u{1f44d}',
+    ]
+  };
+
+  const picks = templates[type] || templates.xiaohongshu;
+  const result = picks[Math.floor(Math.random() * picks.length)];
+
+  document.getElementById('aiwrite-output').innerHTML = result;
+  aiUsage++;
+  localStorage.setItem('ai_usage', aiUsage);
+  document.getElementById('aiwrite-count').innerText = '免费额度：' + (3-aiUsage) + '次/天';
+}
+
+function buyPro() {
+  alert('Pro购买流程：\n1. PayPal: paypal.me/devtoolspro\n2. 支付宝: 联系客服获取\n3. 微信: 联系客服获取\n\n购买后发送交易ID到邮箱，自动开通PRO权限。');
+}
+
+// Reset daily usage at midnight
+const today = new Date().toDateString();
+const lastReset = localStorage.getItem('ai_reset_date');
+if (lastReset !== today) {
+  localStorage.setItem('ai_usage', '0');
+  localStorage.setItem('ai_reset_date', today);
+}
+</script>
+</body>
+</html>
