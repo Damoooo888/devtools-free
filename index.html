@@ -124,7 +124,7 @@ button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:poi
     <h2>升级 PRO - 一次性购买 $4.99</h2>
     <p>无限AI文案 + 图片去背景 + JSON高级功能 + 未来所有新工具</p>
     <a href="#" onclick="buyPro()">立即升级</a>
-    <p style="margin-top:8px;font-size:12px;opacity:.7">支持 PayPal / 支付宝 / 微信支付</p>
+    <p style="margin-top:8px;font-size:12px;opacity:.7">支持支付宝 / 微信支付 → 跳转爱发电</p>
   </div>
 </div>
 
@@ -221,7 +221,7 @@ function generateAI() {
 }
 
 function buyPro() {
-  alert('Pro购买流程：\n1. PayPal: paypal.me/devtoolspro\n2. 支付宝: 联系客服获取\n3. 微信: 联系客服获取\n\n购买后发送交易ID到邮箱，自动开通PRO权限。');
+  window.open('https://afdian.com/u/b125ef70536411f1a56c5254001e7c00', '_blank');
 }
 
 // Reset daily usage at midnight
