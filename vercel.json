@@ -1,0 +1,1 @@
+{"buildCommand":"echo 'static site'","outputDirectory":".","installCommand":"echo 'no deps'","routes":[{"src":"/(.*)","dest":"/index.html"}]}

@@ -48,7 +48,7 @@ button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:poi
     <a href="#" onclick="showTool('json')">JSON格式化</a>
     <a href="#" onclick="showTool('aiwrite')">AI文案</a>
     <a href="#" onclick="showTool('bgremove')">去背景</a>
-    <a href="#" class="pro-btn">PRO $4.99</a>
+    <a href="#" class="pro-btn">PRO ¥5</a>
   </nav>
 </div>
 
@@ -104,7 +104,7 @@ button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:poi
 - 无限次数AI文案生成<br>
 - 小红书/公众号/知乎/短视频全平台<br>
 - 图片去背景功能<br>
-- 仅需 $4.99 一次性购买
+- 仅需 ¥5 一次性购买
 </div></div>
   </div>
 
@@ -121,7 +121,7 @@ button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:poi
 
   <!-- PRO Banner -->
   <div class="pro-banner">
-    <h2>升级 PRO - 一次性购买 $4.99</h2>
+    <h2>升级 PRO - 一次性购买 ¥5</h2>
     <p>无限AI文案 + 图片去背景 + JSON高级功能 + 未来所有新工具</p>
     <a href="#" onclick="buyPro()">立即升级</a>
     <p style="margin-top:8px;font-size:12px;opacity:.7">支持支付宝 / 微信支付 → 跳转爱发电</p>
@@ -129,7 +129,7 @@ button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:poi
 </div>
 
 <div class="footer">
-  DevTools Free - 无需注册，即开即用 | PRO $4.99 一次性购买永久有效
+  DevTools Free - 无需注册，即开即用 | PRO ¥5 一次性购买永久有效
 </div>
 
 <script>
@@ -189,7 +189,7 @@ let aiUsage = parseInt(localStorage.getItem('ai_usage') || '0');
 function generateAI() {
   if (aiUsage >= 3) {
     document.getElementById('aiwrite-output').innerHTML =
-      '<div style="background:#fef3c7;padding:12px;border-radius:8px"><strong>免费额度已用完</strong><br>今日已使用3次。升级PRO无限使用 → <a href="#" onclick="buyPro()" style="color:#6366f1">$4.99</a></div>';
+      '<div style="background:#fef3c7;padding:12px;border-radius:8px"><strong>免费额度已用完</strong><br>今日已使用3次。升级PRO无限使用 → <a href="#" onclick="buyPro()" style="color:#6366f1">¥5</a></div>';
     return;
   }
 
@@ -221,7 +221,10 @@ function generateAI() {
 }
 
 function buyPro() {
-  window.open('https://afdian.com/u/b125ef70536411f1a56c5254001e7c00', '_blank');
+  document.getElementById('payment-modal').style.display = 'flex';
+}
+function closePayment() {
+  document.getElementById('payment-modal').style.display = 'none';
 }
 
 // Reset daily usage at midnight
@@ -232,6 +235,27 @@ if (lastReset !== today) {
   localStorage.setItem('ai_reset_date', today);
 }
 </script>
+<!-- Payment Modal -->
+<div id="payment-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center">
+<div style="background:#fff;border-radius:16px;padding:24px;max-width:440px;width:90%;text-align:center;position:relative">
+<span onclick="closePayment()" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#94a3b8">&times;</span>
+<h3 style="margin-bottom:8px">升级 PRO</h3>
+<p style="color:#64748b;margin-bottom:16px;font-size:14px">扫码支付 ¥5，截图发给客服开通</p>
+<div style="display:flex;gap:16px;justify-content:center">
+  <div style="flex:1;max-width:180px">
+    <p style="font-size:13px;font-weight:600;margin-bottom:8px">微信支付</p>
+    <img src="qr-wechat.jpg" alt="微信支付" style="width:100%;border-radius:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <p class="qr-fallback" style="display:none;font-size:12px;color:#94a3b8">请保存微信收款码到 tool-site/qr-wechat.jpg</p>
+  </div>
+  <div style="flex:1;max-width:180px">
+    <p style="font-size:13px;font-weight:600;margin-bottom:8px">支付宝</p>
+    <img src="qr-alipay.jpg" alt="支付宝" style="width:100%;border-radius:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <p class="qr-fallback" style="display:none;font-size:12px;color:#94a3b8">请保存支付宝收款码到 tool-site/qr-alipay.jpg</p>
+  </div>
+</div>
+<p style="margin-top:12px;font-size:12px;color:#94a3b8">付款后截图发送到网站底部邮箱，24h内开通</p>
+</div>
+</div>
 </body>
 </html>
  
